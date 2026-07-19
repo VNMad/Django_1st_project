@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.utils.translation import gettext_lazy as _
 import uuid
 
 
@@ -31,9 +32,14 @@ class Category(UniqueId):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'task_manager_category'
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
+
 
 class Task(UniqueId, TimeStampedModel):
-    title = models.CharField(max_length=100, validators=[MinLengthValidator(3)], unique_for_date='created_at', verbose_name='Title')
+    title = models.CharField(max_length=100, validators=[MinLengthValidator(3)], unique=True, verbose_name='Title')
     description = models.TextField(validators=[MinLengthValidator(3)], verbose_name='Description')
     categories = models.ManyToManyField(Category, related_name='tasks')
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW, verbose_name='Status')
@@ -42,9 +48,15 @@ class Task(UniqueId, TimeStampedModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        db_table = 'task_manager_task'
+        ordering = ['-created_at']
+        verbose_name = _('Task')
+        verbose_name_plural = _('Tasks')
+
 
 class SubTask(UniqueId, TimeStampedModel):
-    title = models.CharField(max_length=100, validators=[MinLengthValidator(3)], verbose_name='Title')
+    title = models.CharField(max_length=100, validators=[MinLengthValidator(3)], unique=True, verbose_name='Title')
     description = models.TextField(validators=[MinLengthValidator(3)], verbose_name='Description')
     task = models.ForeignKey(Task, related_name='subtasks', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW, verbose_name='Status')
@@ -52,3 +64,9 @@ class SubTask(UniqueId, TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        db_table = 'task_manager_subtask'
+        ordering = ['-created_at']
+        verbose_name = _('SubTask')
+        verbose_name_plural = _('SubTasks')

@@ -142,5 +142,69 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+AUTH_USER_MODEL = 'auth.User'
 
+ROLE_PERMISSION = {
+    'Managers': [
+        'auth.user.add',
+        'auth.user.view',
+        'auth.permission.add',
+        'auth.permission.view',
+        'tasks.tag.add',
+        'tasks.tag.change',
+        'tasks.tag.view',
+        'tasks.project.add',
+        'tasks.project.view',
+        'tasks.project.delete',
+        'tasks.project.change',
+        'tasks.task.add',
+        'tasks.task.change',
+        'tasks.task.view',
+        'tasks.projectfile.view',
+        'tasks.projectfile.add',
+        'tasks.projectfile.change',
+        'tasks.projectfile.delete'
+        ],
+    'Clients': [
+        'auth.user.add',
+        'auth.user.change',
+        'auth.user.view',
+        'tasks.project.add',
+        'tasks.project.change',
+        'tasks.project.view',
+        'tasks.projectfile.add',
+        'tasks.projectfile.view',
+        'tasks.tag.add',
+        'tasks.tag.change',
+        'tasks.tag.delete',
+        'tasks.tag.view',
+        'tasks.task.add',
+        'tasks.task.change',
+        'tasks.task.delete',
+        'tasks.task.view',
+    ],
+    'Developers': [
+            'auth.user.add',
+            'auth.user.change',
+            'auth.user.view',
+            'auth.user.delete',
+            'tasks.project.add',
+            'tasks.project.change',
+            'tasks.project.view',
+            'tasks.project.delete',
+            'tasks.projectfile.add',
+            'tasks.projectfile.change',
+            'tasks.projectfile.delete',
+            'tasks.projectfile.view',
+            'tasks.tag.add',
+            'tasks.tag.change',
+            'tasks.tag.delete',
+            'tasks.tag.view',
+            'tasks.task.add',
+            'tasks.task.change',
+            'tasks.task.delete',
+            'tasks.task.view',
+        ]
+}
 

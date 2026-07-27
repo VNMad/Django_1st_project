@@ -53,7 +53,7 @@ class TaskAdmin(admin.ModelAdmin):
 
     @admin.display(description="Title")
     def short_title(self, obj):
-        return f"{obj.title[:10]}..." if len(obj.title) > 10 else obj.title
+        return f"{obj.title[:10]}..." if obj.title[10:] else obj.title
 
     @admin.display(description="Categories")
     def get_categories(self, obj):

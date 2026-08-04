@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'about.apps.AboutConfig',
     'apps.books.apps.BooksConfig',
     'apps.tasks.apps.TasksConfig',
+    'rest_framework',
 ]
 
 
@@ -207,4 +208,3 @@ ROLE_PERMISSION = {
             'tasks.task.view',
         ]
 }
-

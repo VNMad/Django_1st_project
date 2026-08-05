@@ -34,23 +34,21 @@ def get_project_by_id(request, pk):
 
 
 # ---------------- TASKS ---------------- #
-
-@api_view(['POST'])
-def create_task(request):
-    serializer = TaskCreateSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(assignee=request.user, project=Project.objects.first(), priority=Priorities.LOW)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-def get_all_tasks(request):
-    specific_project = request.query_params.get('project')
-    all_tasks = Task.objects.all()
-    if specific_project:
-        all_tasks = all_tasks.filter(project__name__icontains=specific_project)
-    serializer = TaskSerializer(all_tasks, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+@api_view(['GET', 'POST'])
+def put_or_get_all_tasks(request):
+    if request.method == 'GET':
+        specific_project = request.query_params.get('project')
+        all_tasks = Task.objects.all()
+        if specific_project:
+            all_tasks = all_tasks.filter(project__name__icontains=specific_project)
+        serializer = TaskSerializer(all_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        serializer = TaskCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(assignee=request.user, project=Project.objects.first(), priority=Priorities.LOW)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def get_task_by_id(request, pk):
@@ -60,11 +58,11 @@ def get_task_by_id(request, pk):
 
 
 # ---------------- STATISTICS ---------------- #
-@api_view(["GET"])
+@api_view(['GET'])
 def task_statistics(request):
     total_tasks = Task.objects.count()
     overdue_tasks = Task.objects.filter(deadline__lt=timezone.now()).count()
-    status_statistics = Task.objects.values("status").annotate(count=Count("id"))
+    status_statistics = Task.objects.values('status').annotate(count=Count('id'))
 
     return Response({
         "total_tasks": total_tasks,

@@ -43,12 +43,12 @@ def put_or_get_all_tasks(request):
             all_tasks = all_tasks.filter(project__name__icontains=specific_project)
         serializer = TaskSerializer(all_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    if request.method == 'POST':
-        serializer = TaskCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(assignee=request.user, project=Project.objects.first(), priority=Priorities.LOW)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = TaskCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(assignee=request.user, project=Project.objects.first(), priority=Priorities.LOW)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def get_task_by_id(request, pk):

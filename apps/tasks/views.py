@@ -48,6 +48,7 @@ def put_or_get_all_tasks(request):
     if serializer.is_valid():
         serializer.save(assignee=request.user, project=Project.objects.first(), priority=Priorities.LOW)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
